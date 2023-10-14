@@ -1,8 +1,6 @@
 name: Cached Cargo install
 author: Cryptex
 description: Faster cargo install by caching it in github action cache
-icon: download-cloud
-color: green
 
 inputs:
   crate-name:
@@ -32,3 +30,7 @@ runs:
       if: steps.get-cache.outputs.cache-hit != "true"
       run: cargo install ${{ inputs.crate-name }}
       shell: bash
+
+branding:
+  icon: download-cloud
+  color: green
