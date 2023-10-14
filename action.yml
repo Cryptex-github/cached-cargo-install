@@ -1,6 +1,8 @@
 name: Cached Cargo install
 author: Cryptex
 description: Faster cargo install by caching it in github action cache
+icon: download-cloud
+color: green
 
 inputs:
   crate-name:
