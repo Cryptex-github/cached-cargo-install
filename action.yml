@@ -1,0 +1,32 @@
+name: Cached Cargo install
+author: Cryptex
+description: Faster cargo install by caching it in github action cache
+
+inputs:
+  crate-name:
+    description: Crate to be installed
+    required: true
+outputs:
+  cache-hit:
+    description: Whether the crate was retrieved from cache or not
+    value: ${{ steps.crate-cache.outputs.cache-hit }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get ${{ inputs.crate-name }} version
+      id: crate-version
+      run: echo "hash=$(cargo search ${{ inputs.crate-name }} | grep '^${{ inputs.crate-name }} =' | sha256sum)" >> $GITHUB_OUTPUT
+      shell: bash
+    - name: Attempt to load cached version
+      uses: actions/cache@v3
+      id: get-cache
+      with:
+        path: |
+          ~/.cargo/bin/${{ inputs.crate-name }}
+          ~/.cargo/bin/${{ inputs.crate-name }}.exe
+        key: ${{ runner.os }}-${{ steps.crate-version.outputs.hash }}
+    - name: Install ${{ inputs.crate-name }}
+      if: steps.get-cache.outputs.cache-hit != "true"
+      run: cargo install ${{ inputs.crate-name }}
+      shell: bash
