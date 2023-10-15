@@ -1,4 +1,4 @@
-name: Cached Cargo install
+name: Cached Cargo Install
 author: Cryptex
 description: Faster cargo install by caching it in github action cache
 
